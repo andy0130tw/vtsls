@@ -53,5 +53,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
+          cache: pnpm
       - run: pnpm build
       - run: pnpm test
