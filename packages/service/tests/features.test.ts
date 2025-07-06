@@ -203,7 +203,8 @@ function abc(a) {}`,
     const { uri, changeContent } = await openDoc("index.ts");
     const diagnostics = await new Promise<lsp.Diagnostic[]>((resolve) => {
       const disposeDiagHandler = service.onDiagnostics(async (p) => {
-        if (p.diagnostics.length > 0) {
+        // ignore diagnostics from all other documents
+        if (p.uri.includes('index.ts')) {
           disposeDiagHandler.dispose();
           resolve(p.diagnostics);
         }
