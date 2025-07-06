@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [andy0130tw/*]
   pull_request:
     branches: ["**"]
 
@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [16, 18, 20]
+        node: [18, 20, 22, 24]
         os: [ubuntu-latest]
         include:
           - os: macos-latest
