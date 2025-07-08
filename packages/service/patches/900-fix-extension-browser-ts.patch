@@ -1,0 +1,54 @@
+diff --git a/src/extension.browser.ts b/src/extension.browser.ts
+index f39740b..ad66eaa 100644
+--- a/src/extension.browser.ts
++++ b/src/extension.browser.ts
+@@ -3,14 +3,12 @@
+  *  Licensed under the MIT License. See License.txt in the project root for license information.
+  *--------------------------------------------------------------------------------------------*/
+ 
+-import VsCodeTelemetryReporter from '@vscode/extension-telemetry';
+ import * as vscode from 'vscode';
+ import { Api, getExtensionApi } from './api';
+ import { CommandManager } from './commands/commandManager';
+ import { registerBaseCommands } from './commands/index';
+ import { TypeScriptServiceConfiguration } from './configuration/configuration';
+ import { BrowserServiceConfigurationProvider } from './configuration/configuration.browser';
+-import { ExperimentationTelemetryReporter, IExperimentationTelemetryReporter } from './experimentTelemetryReporter';
+ import { registerAtaSupport } from './filesystems/ata';
+ import { createLazyClientHost, lazilyActivateClient } from './lazyClientHost';
+ import { Logger } from './logging/logger';
+@@ -23,7 +21,6 @@ import { WorkerServerProcessFactory } from './tsServer/serverProcess.browser';
+ import { ITypeScriptVersionProvider, TypeScriptVersion, TypeScriptVersionSource } from './tsServer/versionProvider';
+ import { ActiveJsTsEditorTracker } from './ui/activeJsTsEditorTracker';
+ import { Disposable } from './utils/dispose';
+-import { getPackageInfo } from './utils/packageInfo';
+ import { isWebAndHasSharedArrayBuffers } from './utils/platform';
+ 
+ class StaticVersionProvider implements ITypeScriptVersionProvider {
+@@ -63,14 +60,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Api> {
+ 			vscode.Uri.joinPath(context.extensionUri, 'dist/browser/typescript/tsserver.web.js').toString(),
+ 			API.fromSimpleString('5.8.3')));
+ 
+-	let experimentTelemetryReporter: IExperimentationTelemetryReporter | undefined;
+-	const packageInfo = getPackageInfo(context);
+-	if (packageInfo) {
+-		const { aiKey } = packageInfo;
+-		const vscTelemetryReporter = new VsCodeTelemetryReporter(aiKey);
+-		experimentTelemetryReporter = new ExperimentationTelemetryReporter(vscTelemetryReporter);
+-		context.subscriptions.push(experimentTelemetryReporter);
+-	}
++	let experimentTelemetryReporter;
+ 
+ 	const logger = new Logger();
+ 
+@@ -93,10 +83,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<Api> {
+ 
+ 	// context.subscriptions.push(task.register(lazyClientHost.map(x => x.serviceClient)));
+ 
+-	import('./languageFeatures/tsconfig').then(module => {
+-		context.subscriptions.push(module.register());
+-	});
+-
+ 	context.subscriptions.push(lazilyActivateClient(lazyClientHost, pluginManager, activeJsTsEditorTracker, async () => {
+ 		await startPreloadWorkspaceContentsIfNeeded(context, logger);
+ 	}));
