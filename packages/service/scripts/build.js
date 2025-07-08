@@ -35,7 +35,7 @@ async function build({ watch }) {
     platform: "browser",
     plugins: [
       nodeModulesPolyfillPlugin({
-        globals: { process: true },
+        globals: { Buffer: true, process: true },
       }),
     ],
   };
