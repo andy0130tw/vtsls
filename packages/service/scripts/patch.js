@@ -186,7 +186,7 @@ async function getPatchFiles(patchesPath) {
 }
 
 /**
- * @param {boolean} refresh
+ * @param {boolean} [refresh]
  */
 async function applyPatches(refresh) {
   const patched = await checkTsExtDir(tsExtPath);

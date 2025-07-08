@@ -1,4 +1,4 @@
-import { CodeActionKind } from "vscode-languageserver-protocol";
+import type { CodeActionKind } from "vscode-languageserver-protocol";
 import { CompletionCache } from "./completion";
 import { tsCommands } from "./pkgJson";
 
@@ -10,14 +10,14 @@ export const signatureHelpTriggerCharacters = ["(", ",", "<"];
 export const signatureHelpReTriggerCharacters = [")"];
 
 export const codeActionKinds = [
-  CodeActionKind.Source,
-  CodeActionKind.SourceFixAll,
-  CodeActionKind.SourceOrganizeImports,
-  CodeActionKind.QuickFix,
-  CodeActionKind.Refactor,
-  CodeActionKind.RefactorExtract,
-  CodeActionKind.RefactorRewrite,
-  CodeActionKind.RefactorExtract,
+  'source'                 satisfies typeof CodeActionKind.Source,
+  'source.fixAll'          satisfies typeof CodeActionKind.SourceFixAll,
+  'source.organizeImports' satisfies typeof CodeActionKind.SourceOrganizeImports,
+  'quickfix'               satisfies typeof CodeActionKind.QuickFix,
+  'refactor'               satisfies typeof CodeActionKind.Refactor,
+  'refactor.extract'       satisfies typeof CodeActionKind.RefactorExtract,
+  'refactor.rewrite'       satisfies typeof CodeActionKind.RefactorRewrite,
+  'refactor.inline'        satisfies typeof CodeActionKind.RefactorInline,
 ];
 
 export const semanticTokenTypes = [

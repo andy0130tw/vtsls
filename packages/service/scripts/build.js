@@ -6,6 +6,8 @@ const { applyPatches } = require("./patch");
 const outDir = path.resolve(__dirname, "../dist");
 const srcDir = path.resolve(__dirname, "../src");
 
+const { nodeModulesPolyfillPlugin } = require("esbuild-plugins-node-modules-polyfill");
+
 /**
  * @param args {{ watch: boolean }}
  */
@@ -13,6 +15,7 @@ async function build({ watch }) {
   const pkgJson = await fs.readFile(path.resolve(__dirname, "../package.json"), "utf8");
   const { dependencies = [] } = JSON.parse(pkgJson);
 
+  /** @type {esbuild.BuildOptions} */
   const esmOpts = {
     entryPoints: [srcDir],
     tsconfig: path.resolve(__dirname, "../tsconfig.build.json"),
@@ -23,6 +26,21 @@ async function build({ watch }) {
     platform: "node",
     external: Object.keys(dependencies).flatMap((d) => [d, `${d}/*`]),
   };
+
+  /** @type {esbuild.BuildOptions} */
+  const esmBrowserOpts = {
+    ...esmOpts,
+    outfile: path.resolve(outDir, "browser.mjs"),
+    target: "es2020",
+    platform: "browser",
+    plugins: [
+      nodeModulesPolyfillPlugin({
+        globals: { process: true },
+      }),
+    ],
+  };
+
+  /** @type {esbuild.BuildOptions} */
   const cjsOpts = {
     ...esmOpts,
     outfile: path.resolve(outDir, "index.js"),
@@ -30,11 +48,17 @@ async function build({ watch }) {
     define: { "import.meta.url": "importMetaUrl" },
     inject: [path.resolve(__dirname, "cjs_shims.js")],
   };
+
   if (!watch) {
     await esbuild.build(esmOpts);
+    await esbuild.build(esmBrowserOpts);
     await esbuild.build(cjsOpts);
   } else {
-    const contexts = [await esbuild.context(esmOpts), await esbuild.context(cjsOpts)];
+    const contexts = [
+      await esbuild.context(esmOpts),
+      await esbuild.context(esmBrowserOpts),
+      await esbuild.context(cjsOpts),
+    ];
     contexts.map((ctx) => ctx.watch());
   }
 }

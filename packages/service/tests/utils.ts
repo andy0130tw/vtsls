@@ -1,9 +1,8 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as lsp from "vscode-languageserver-protocol";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
-import { TSLanguageService, createTSLanguageService } from "../src/service";
+import { TSLanguageService, createTSLanguageService, fsPromises as fs } from "../src/service";
 
 export async function createTestService(workspacePath: string) {
   const service = createTSLanguageService({
