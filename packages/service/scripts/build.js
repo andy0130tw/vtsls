@@ -39,12 +39,6 @@ async function build({ watch }) {
         globals: { Buffer: true, process: true },
       }),
     ],
-    external: [
-      ...esmOpts.external,
-      '@vscode/sync-api-common',
-      '@vscode/sync-api-service',
-      '@vscode/ts-package-manager',
-    ]
   };
 
   /** @type {esbuild.BuildOptions} */

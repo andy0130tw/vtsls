@@ -56,6 +56,15 @@ importers:
       '@vscode/l10n':
         specifier: ^0.0.18
         version: 0.0.18
+      '@vscode/sync-api-common':
+        specifier: ^0.8.1
+        version: 0.8.1
+      '@vscode/sync-api-service':
+        specifier: ^0.8.1
+        version: 0.8.1
+      '@vscode/ts-package-manager':
+        specifier: ^0.0.2
+        version: 0.0.2
       '@vtsls/vscode-fuzzy':
         specifier: workspace:0.0.1
         version: link:../vscode-fuzzy
@@ -970,6 +979,24 @@ packages:
 
   /@vscode/l10n@0.0.18:
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
+    dev: false
+
+  /@vscode/sync-api-common@0.8.1:
+    resolution: {integrity: sha512-XfanQNxkUlCpAsQ2+1SzNEdoY7jtcu48jYBR0n864ZWAWrH7m2QBK32YoNlrDN2V0eh8tdF0WH1NuHOm3Y021A==}
+    engines: {node: '>=16.14.2'}
+    dev: false
+
+  /@vscode/sync-api-service@0.8.1:
+    resolution: {integrity: sha512-W9mWVJcnxqqmGIgYKwddMuBsCFff+nxkA67nGlnRGUjpu6Mb+CoYaYLwFriq2c74zpRyMsON7Nfhh5zlFvTAeg==}
+    engines: {node: '>=16.14.2', vscode: ^1.71.0}
+    dependencies:
+      '@vscode/sync-api-common': 0.8.1
+      uuid: 9.0.1
+      vscode-uri: 3.1.0
+    dev: false
+
+  /@vscode/ts-package-manager@0.0.2:
+    resolution: {integrity: sha512-cXPxGbPVTkEQI8mUiWYUwB6j3ga6M9i7yubUOCrjgZ01GeZPMSnaWRprfJ09uuy81wJjY2gfHgLsOgwrGvUBTw==}
     dev: false
 
   /acorn-jsx@5.3.2(acorn@8.14.0):
@@ -2078,6 +2105,11 @@ packages:
     dependencies:
       punycode: 2.3.1
     dev: true
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+    dev: false
 
   /vite-node@3.0.3(@types/node@16.18.126):
     resolution: {integrity: sha512-0sQcwhwAEw/UJGojbhOrnq3HtiZ3tC7BzpAa0lx3QaTX0S3YX70iGcik25UBdB96pmdwjyY2uyKNYruxCDmiEg==}
