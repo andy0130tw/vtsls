@@ -1,0 +1,23 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+deleted file mode 100644
+index 449464f7e71412c27e13766c0c9432265ab847ad..0000000000000000000000000000000000000000
+diff --git a/dist/index.js b/dist/index.js
+index d752234697e48a71883a6a776c79626d0896263f..800cf6f94db83fe665f2ce5d9c02e6780503d34c 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -150,10 +150,11 @@ var nodeModulesPolyfillPlugin = /* @__PURE__ */ __name((options = {}) => {
+         if (initialOptions.platform === "browser") {
+           const packageJson = await localPkg.loadPackageJSON(args.resolveDir);
+           const browserFieldValue = packageJson?.browser;
+-          if (typeof browserFieldValue === "string") return;
+-          const browserFieldValueForModule = browserFieldValue?.[args.path];
+-          if (browserFieldValueForModule === false) return result.empty;
+-          if (browserFieldValueForModule !== void 0) return;
++          if (typeof browserFieldValue !== "string") {
++            const browserFieldValueForModule = browserFieldValue?.[args.path];
++            if (browserFieldValueForModule === false) return result.empty;
++            if (browserFieldValueForModule !== void 0) return;
++          }  // else just fall through
+         }
+         const moduleName = normalizeNodeBuiltinPath(args.path);
+         const polyfillOption = modules[moduleName] ?? modules[`node:${moduleName}`];

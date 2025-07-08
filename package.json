@@ -32,5 +32,10 @@
     "*.{js,ts}": [
       "eslint --cache --fix"
     ]
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "esbuild-plugins-node-modules-polyfill@1.7.1": "patches/esbuild-plugins-node-modules-polyfill@1.7.1.patch"
+    }
   }
 }

@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  esbuild-plugins-node-modules-polyfill@1.7.1:
+    hash: tmboey2tnmdz2ubnwgfeamb2hu
+    path: patches/esbuild-plugins-node-modules-polyfill@1.7.1.patch
+
 importers:
 
   .:
@@ -81,7 +86,7 @@ importers:
         version: 0.25.4
       esbuild-plugins-node-modules-polyfill:
         specifier: ^1.7.1
-        version: 1.7.1(esbuild@0.25.4)
+        version: 1.7.1(patch_hash=tmboey2tnmdz2ubnwgfeamb2hu)(esbuild@0.25.4)
       vitest:
         specifier: ^3.0.3
         version: 3.0.3(@types/node@16.18.126)
@@ -1176,7 +1181,7 @@ packages:
     resolution: {integrity: sha512-qqnD1yMU6tk/jnaMosogGySTZP8YtUgAffA9nMN+E/rjxcfRQ6IEk7IiozUjgxKoFHBGjTLnrHB/YC45r/59EQ==}
     dev: true
 
-  /esbuild-plugins-node-modules-polyfill@1.7.1(esbuild@0.25.4):
+  /esbuild-plugins-node-modules-polyfill@1.7.1(patch_hash=tmboey2tnmdz2ubnwgfeamb2hu)(esbuild@0.25.4):
     resolution: {integrity: sha512-IEaUhaS1RukGGcatDzqJmR+AzUWJ2upTJZP2i7FzR37Iw5Lk0LReCTnWnPMWnGG9lO4MWTGKEGGLWEOPegTRJA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -1187,6 +1192,7 @@ packages:
       local-pkg: 1.1.1
       resolve.exports: 2.0.3
     dev: true
+    patched: true
 
   /esbuild@0.19.11:
     resolution: {integrity: sha512-HJ96Hev2hX/6i5cDVwcqiJBBtuo9+FeIJOtZ9W1kA5M6AMJRHUZlpYZ1/SbEwtO0ioNAW8rUooVpC/WehY2SfA==}

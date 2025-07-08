@@ -9,6 +9,7 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
+  "browser": "./dist/browser.mjs",
   "files": [
     "./dist/index.js",
     "./dist/index.mjs",
