@@ -30,6 +30,7 @@ async function build({ watch }) {
   /** @type {esbuild.BuildOptions} */
   const esmBrowserOpts = {
     ...esmOpts,
+    tsconfig: path.resolve(__dirname, "../tsconfig.build-web.json"),
     outfile: path.resolve(outDir, "browser.mjs"),
     target: "es2020",
     platform: "browser",
@@ -38,6 +39,12 @@ async function build({ watch }) {
         globals: { Buffer: true, process: true },
       }),
     ],
+    external: [
+      ...esmOpts.external,
+      '@vscode/sync-api-common',
+      '@vscode/sync-api-service',
+      '@vscode/ts-package-manager',
+    ]
   };
 
   /** @type {esbuild.BuildOptions} */

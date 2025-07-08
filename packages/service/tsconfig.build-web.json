@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "paths": {
+      "@vsc-ts/extension": ["src/typescript-language-features/src/extension.browser"],
+      "@vsc-ts/*": ["src/typescript-language-features/src/*"],
+      "vscode": ["src/shims"]
+    }
+  }
+}
