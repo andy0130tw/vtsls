@@ -123,7 +123,7 @@ export function initializeShimServices(
   const diagnosticsSerivce = new DiagnosticsShimService();
   const languageFeaturesService = new LanguageFeaturesShimService(delegate, diagnosticsSerivce);
   const windowService = new WindowShimService(delegate);
-  const context = createContextShim(initOptions.tsExtLogPath ?? os.tmpdir(), initOptions.hostInfo);
+  const context = createContextShim(initOptions.tsExtLogPath ?? os.tmpdir(), initOptions.hostInfo, initOptions.extensionUri);
 
   const dispose = () => {
     configurationService.dispose();

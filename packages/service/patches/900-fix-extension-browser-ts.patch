@@ -1,5 +1,5 @@
 diff --git a/src/extension.browser.ts b/src/extension.browser.ts
-index f39740b..ad66eaa 100644
+index f39740b..2b76d07 100644
 --- a/src/extension.browser.ts
 +++ b/src/extension.browser.ts
 @@ -3,14 +3,12 @@
@@ -25,9 +25,24 @@ index f39740b..ad66eaa 100644
  import { isWebAndHasSharedArrayBuffers } from './utils/platform';
  
  class StaticVersionProvider implements ITypeScriptVersionProvider {
-@@ -63,14 +60,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Api> {
- 			vscode.Uri.joinPath(context.extensionUri, 'dist/browser/typescript/tsserver.web.js').toString(),
- 			API.fromSimpleString('5.8.3')));
+@@ -44,7 +41,7 @@ class StaticVersionProvider implements ITypeScriptVersionProvider {
+ 	readonly localVersions = [];
+ }
+ 
+-export async function activate(context: vscode.ExtensionContext): Promise<Api> {
++export async function activate(context: vscode.ExtensionContext, versionInString?: string): Promise<Api> {
+ 	const pluginManager = new PluginManager();
+ 	context.subscriptions.push(pluginManager);
+ 
+@@ -60,17 +57,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<Api> {
+ 	const versionProvider = new StaticVersionProvider(
+ 		new TypeScriptVersion(
+ 			TypeScriptVersionSource.Bundled,
+-			vscode.Uri.joinPath(context.extensionUri, 'dist/browser/typescript/tsserver.web.js').toString(),
+-			API.fromSimpleString('5.8.3')));
++			// the user should adjust the extensionUri to point to a valid path
++			vscode.Uri.joinPath(context.extensionUri, 'tsserver.web.js').toString(),
++			API.fromSimpleString(versionInString ?? '5.8.3')));
  
 -	let experimentTelemetryReporter: IExperimentationTelemetryReporter | undefined;
 -	const packageInfo = getPackageInfo(context);
@@ -41,7 +56,7 @@ index f39740b..ad66eaa 100644
  
  	const logger = new Logger();
  
-@@ -93,10 +83,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<Api> {
+@@ -93,10 +84,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<Api> {
  
  	// context.subscriptions.push(task.register(lazyClientHost.map(x => x.serviceClient)));
  

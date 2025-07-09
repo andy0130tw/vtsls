@@ -6,6 +6,7 @@ export interface TSLanguageServiceOptions {
   clientCapabilities: lsp.ClientCapabilities;
   hostInfo?: string;
   tsExtLogPath?: string;
+  extensionUri?: string;
 }
 
 export { TSLanguageServiceConfig } from "./pkgJson";
