@@ -143,7 +143,7 @@ export function initializeShimServices(
   env = {
     language: initOptions.locale ?? "en",
     openExternal: (uri: import("vscode").Uri) => delegate.openExternal(uri.toString(true)),
-    uiKind: UIKind.Desktop,
+    uiKind: process.env.BROWSER_ENV ? UIKind.Web : UIKind.Desktop,
   } as any;
   chat = createChatShim() as any;
 

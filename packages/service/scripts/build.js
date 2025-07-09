@@ -24,6 +24,9 @@ async function build({ watch }) {
     format: "esm",
     target: "node16",
     platform: "node",
+    define: {
+      'process.env.BROWSER_ENV': 'false',
+    },
     external: Object.keys(dependencies).flatMap((d) => [d, `${d}/*`]),
   };
 
@@ -34,6 +37,9 @@ async function build({ watch }) {
     outfile: path.resolve(outDir, "browser.mjs"),
     target: "es2020",
     platform: "browser",
+    define: {
+      'process.env.BROWSER_ENV': 'true',
+    },
     plugins: [
       nodeModulesPolyfillPlugin({
         globals: { Buffer: true, process: true },
