@@ -3,9 +3,18 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { IDisposable } from '@vsc-ts/utils/dispose';
 import * as fs from "fs";
 import { promises as fsPromises } from "fs";
 import type * as vscode from "vscode";
+import { FileSystemError } from 'vscode';
+import { URI } from 'vscode-uri';
+import { FileSystemProviderErrorCode } from './fileSystemError';
+
+export interface RegisterFileSystemProviderOptions {
+  readonly isCaseSensitive?: boolean;
+  readonly isReadonly?: boolean | vscode.MarkdownString;
+}
 
 export enum FileType {
   /**
@@ -143,9 +152,114 @@ function toType(entry: fs.Stats, symbolicLink?: { dangling: boolean }): FileType
   return type;
 }
 
-export function createFileSystemShim() {
+export function createFileSystemShim(extensionUri: URI | undefined) {
+  // pretty classic way of defining private member, right?
+  const _fsProvider = new Map<string, { impl: vscode.FileSystemProvider, isReadonly: boolean } >()
+
+  function getFsProvider(scheme: string) {
+    return _fsProvider.get(scheme)
+  }
+
+  // from path mapper
+  function fromResource(uri: URI) {
+    if (extensionUri
+      && uri.scheme === extensionUri.scheme
+      && uri.authority === extensionUri.authority
+      && uri.path.startsWith(extensionUri.path + '/dist/browser/typescript/lib.')
+      && uri.path.endsWith('.d.ts')) {
+      return uri.path;
+    }
+    return `/${uri.scheme}/${uri.authority}${uri.path}`;
+  }
+
+  // from extHostFileSystemConsumer.ts
+  async function mkdirp(provider: vscode.FileSystemProvider, uri: URI) {
+    const pat = uri.path
+    const toCreate: URI[] = []
+
+    const dirname = (u: URI) => URI.from({...u, path: u.path.replace(/\/[^/]*$/, '')})
+
+    let directory = dirname(uri)
+    while (pat != '/') {
+      try {
+        const stat = await provider.stat(directory)
+        if ((stat.type & FileType.Directory) == 0) {
+          throw FileSystemError.FileExists(`Unable to create folder '${directory.scheme === 'file' ? directory.fsPath : directory.toString(true)}' that already exists but is not a directory`)
+        }
+        break  // found a existing dir, done
+      } catch (err) {
+        // FIXME: cannot use identity check on FileSystemError for MemFs
+        if (err?.code !== FileSystemProviderErrorCode.FileNotFound &&
+            ((err?.name ?? '') as string).split(' ')[0] !== FileSystemProviderErrorCode.FileNotFound) {
+          throw err
+        }
+        toCreate.push(URI.from({...directory, path: directory.path + '/'}))
+        directory = dirname(directory)
+      }
+    }
+
+    for (let i = toCreate.length - 1; i >= 0; i--) {
+      try {
+        await provider.createDirectory(toCreate[i]);
+      } catch (err) {
+        if (err?.code !== FileSystemProviderErrorCode.FileExists &&
+            ((err?.name ?? '') as string).split(' ')[0] !== FileSystemProviderErrorCode.FileExists) {
+          throw err
+        }
+      }
+    }
+  }
+
   return {
+    isWritableFileSystem(scheme: string): boolean | undefined {
+      console.warn('is writable file system?', scheme)
+      return true
+    },
+
+    _addFileSystemProvider(scheme: string, provider: vscode.FileSystemProvider, options?: RegisterFileSystemProviderOptions): IDisposable {
+      console.warn('registerFileSystemProvider', scheme, provider, options)
+
+      if (_fsProvider.has(scheme)) {
+        throw new Error(`A provider with scheme ${scheme} is already registered`)
+      }
+      _fsProvider.set(scheme, {
+        impl: provider,
+        // TODO: extUri | extUriIgnoreCase
+        isReadonly: !!options?.isReadonly,
+      })
+
+      return {
+        dispose: () => {
+          _fsProvider.delete(scheme)
+        }
+      }
+    },
+
+    async readFile(uri: vscode.Uri): Promise<Uint8Array> {
+      const provider = getFsProvider(uri.scheme)
+      if (provider) {
+        return (await provider.impl.readFile(uri)).slice()
+      }
+      return new Uint8Array(await fsPromises.readFile(fromResource(uri))).slice()
+    },
+
+    async writeFile(uri: vscode.Uri, content: Uint8Array): Promise<void> {
+      const provider = getFsProvider(uri.scheme)
+      if (provider && !provider.isReadonly) {
+        // TODO: make sure extUri exists
+        await mkdirp(provider.impl, uri)
+        return await provider.impl.writeFile(uri, content, { create: true, overwrite: true })
+      }
+      const pat = fromResource(uri)
+      await fsPromises.mkdir(pat.replace(/\/[^/]*$/, ''), { recursive: true })
+      await fsPromises.writeFile(pat, content)
+    },
+
     async stat(uri: vscode.Uri): Promise<FileStat> {
+      const provider = getFsProvider(uri.scheme)
+      if (provider) {
+        return await provider.impl.stat(uri)
+      }
       const { stat, symbolicLink } = await symLinkStat(uri.fsPath); // cannot use fs.stat() here to support links properly
       return {
         type: toType(stat, symbolicLink),

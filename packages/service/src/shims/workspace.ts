@@ -4,11 +4,11 @@ import * as lsp from "vscode-languageserver-protocol";
 import { URI, Utils as uriUtils } from "vscode-uri";
 import { TSLanguageServiceDelegate } from "../service/delegate";
 import { Barrier } from "../utils/barrier";
-import { Disposable } from "../utils/dispose";
+import { Disposable, IDisposable } from "../utils/dispose";
 import { onCaseInsensitiveFileSystem } from "../utils/fs";
 import { ResourceMap } from "../utils/resourceMap";
 import { ConfigurationShimService } from "./configuration";
-import { createFileSystemShim } from "./fs";
+import { createFileSystemShim, RegisterFileSystemProviderOptions } from "./fs";
 import { IsomorphicTextDocument as TextDocument } from "./textdocument";
 import * as types from "./types";
 
@@ -51,9 +51,12 @@ export class WorkspaceShimService extends Disposable {
   constructor(
     private readonly delegate: TSLanguageServiceDelegate,
     private readonly configurationShim: ConfigurationShimService,
-    initWorkspaceFolders?: lsp.WorkspaceFolder[]
+    initWorkspaceFolders?: lsp.WorkspaceFolder[],
+    extensionUri?: string
   ) {
     super();
+
+    this._fs = createFileSystemShim(extensionUri ? URI.parse(extensionUri) : undefined);
 
     this._documents = new ResourceMap(undefined, {
       onCaseInsensitiveFileSystem: onCaseInsensitiveFileSystem(),
@@ -73,7 +76,7 @@ export class WorkspaceShimService extends Disposable {
     }
   }
 
-  private readonly _fs = createFileSystemShim();
+  private readonly _fs;
 
   get fs() {
     return this._fs;
@@ -270,6 +273,22 @@ export class WorkspaceShimService extends Disposable {
 
   // TODO: should we handle this?
   readonly isTrusted = true;
+
+  registerFileSystemProvider(scheme: string, provider: vscode.FileSystemProvider, options: RegisterFileSystemProviderOptions): IDisposable {
+    return this._fs._addFileSystemProvider(scheme, provider, options)
+  }
+
+  createFileSystemWatcher(): vscode.FileSystemWatcher {
+    return {
+      ignoreChangeEvents: true,
+      ignoreCreateEvents: true,
+      ignoreDeleteEvents: true,
+      onDidChange() { return { dispose() {} } },
+      onDidCreate() { return { dispose() {} } },
+      onDidDelete() { return { dispose() {} } },
+      dispose() {}
+    }
+  }
 
   async requestWorkspaceTrust() {
     return true;

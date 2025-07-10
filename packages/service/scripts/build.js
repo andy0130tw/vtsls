@@ -40,6 +40,7 @@ async function build({ watch }) {
     define: {
       'process.env.BROWSER_ENV': 'true',
     },
+    external: [...esmOpts.external, 'uuid'],
     plugins: [
       nodeModulesPolyfillPlugin({
         globals: { Buffer: true, process: true },

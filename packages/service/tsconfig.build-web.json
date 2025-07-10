@@ -5,6 +5,7 @@
     "paths": {
       "@vsc-ts/extension": ["src/typescript-language-features/src/extension.browser"],
       "@vsc-ts/*": ["src/typescript-language-features/src/*"],
+      "@vscode/sync-api-service": ["vscode-wasm/sync-api-service/src/main.ts"],
       "vscode": ["src/shims"]
     }
   }

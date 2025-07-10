@@ -2,3 +2,7 @@
 	path = packages/service/vscode
 	url = https://github.com/microsoft/vscode
 	shallow = true
+[submodule "packages/service/vscode-wasm"]
+	path = packages/service/vscode-wasm
+	url = https://github.com/microsoft/vscode-wasm.git
+	shallow = true

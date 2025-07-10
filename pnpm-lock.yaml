@@ -59,9 +59,6 @@ importers:
       '@vscode/sync-api-common':
         specifier: ^0.8.1
         version: 0.8.1
-      '@vscode/sync-api-service':
-        specifier: ^0.8.1
-        version: 0.8.1
       '@vscode/ts-package-manager':
         specifier: ^0.0.2
         version: 0.0.2
@@ -98,7 +95,7 @@ importers:
         version: 1.7.1(patch_hash=tmboey2tnmdz2ubnwgfeamb2hu)(esbuild@0.25.4)
       vitest:
         specifier: ^3.0.3
-        version: 3.0.3(@types/node@16.18.126)
+        version: 3.0.3
 
   packages/vscode-fuzzy: {}
 
@@ -939,7 +936,7 @@ packages:
       '@vitest/spy': 3.0.3
       estree-walker: 3.0.3
       magic-string: 0.30.17
-      vite: 5.1.3(@types/node@16.18.126)
+      vite: 5.1.3
     dev: true
 
   /@vitest/pretty-format@3.0.3:
@@ -984,15 +981,6 @@ packages:
   /@vscode/sync-api-common@0.8.1:
     resolution: {integrity: sha512-XfanQNxkUlCpAsQ2+1SzNEdoY7jtcu48jYBR0n864ZWAWrH7m2QBK32YoNlrDN2V0eh8tdF0WH1NuHOm3Y021A==}
     engines: {node: '>=16.14.2'}
-    dev: false
-
-  /@vscode/sync-api-service@0.8.1:
-    resolution: {integrity: sha512-W9mWVJcnxqqmGIgYKwddMuBsCFff+nxkA67nGlnRGUjpu6Mb+CoYaYLwFriq2c74zpRyMsON7Nfhh5zlFvTAeg==}
-    engines: {node: '>=16.14.2', vscode: ^1.71.0}
-    dependencies:
-      '@vscode/sync-api-common': 0.8.1
-      uuid: 9.0.1
-      vscode-uri: 3.1.0
     dev: false
 
   /@vscode/ts-package-manager@0.0.2:
@@ -2106,12 +2094,7 @@ packages:
       punycode: 2.3.1
     dev: true
 
-  /uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
-    hasBin: true
-    dev: false
-
-  /vite-node@3.0.3(@types/node@16.18.126):
+  /vite-node@3.0.3:
     resolution: {integrity: sha512-0sQcwhwAEw/UJGojbhOrnq3HtiZ3tC7BzpAa0lx3QaTX0S3YX70iGcik25UBdB96pmdwjyY2uyKNYruxCDmiEg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -2120,7 +2103,7 @@ packages:
       debug: 4.4.0
       es-module-lexer: 1.6.0
       pathe: 2.0.2
-      vite: 5.1.3(@types/node@16.18.126)
+      vite: 5.1.3
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -2132,7 +2115,7 @@ packages:
       - terser
     dev: true
 
-  /vite@5.1.3(@types/node@16.18.126):
+  /vite@5.1.3:
     resolution: {integrity: sha512-UfmUD36DKkqhi/F75RrxvPpry+9+tTkrXfMNZD+SboZqBCMsxKtO52XeGzzuh7ioz+Eo/SYDBbdb0Z7vgcDJew==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -2160,7 +2143,6 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 16.18.126
       esbuild: 0.19.11
       postcss: 8.4.35
       rollup: 4.12.0
@@ -2168,7 +2150,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@3.0.3(@types/node@16.18.126):
+  /vitest@3.0.3:
     resolution: {integrity: sha512-dWdwTFUW9rcnL0LyF2F+IfvNQWB0w9DERySCk8VMG75F8k25C7LsZoh6XfCjPvcR8Nb+Lqi9JKr6vnzH7HSrpQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -2193,7 +2175,6 @@ packages:
       jsdom:
         optional: true
     dependencies:
-      '@types/node': 16.18.126
       '@vitest/expect': 3.0.3
       '@vitest/mocker': 3.0.3(vite@5.1.3)
       '@vitest/pretty-format': 3.0.3
@@ -2211,8 +2192,8 @@ packages:
       tinyexec: 0.3.2
       tinypool: 1.0.2
       tinyrainbow: 2.0.0
-      vite: 5.1.3(@types/node@16.18.126)
-      vite-node: 3.0.3(@types/node@16.18.126)
+      vite: 5.1.3
+      vite-node: 3.0.3
       why-is-node-running: 2.3.0
     transitivePeerDependencies:
       - less
