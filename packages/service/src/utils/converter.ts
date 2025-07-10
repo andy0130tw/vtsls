@@ -38,8 +38,8 @@ class LspInvariantConverter {
 
   convertRangeToLsp = (range: vscode.Range): lsp.Range => {
     return {
-      start: range.start,
-      end: range.end,
+      start: this.convertPositionToLsp(range.start),
+      end: this.convertPositionToLsp(range.end),
     };
   };
 
