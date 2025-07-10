@@ -212,13 +212,11 @@ export function createFileSystemShim(extensionUri: URI | undefined) {
 
   return {
     isWritableFileSystem(scheme: string): boolean | undefined {
-      console.warn('is writable file system?', scheme)
-      return true
+      if (!_fsProvider.has(scheme)) return undefined
+      return !_fsProvider.get(scheme)!.isReadonly
     },
 
     _addFileSystemProvider(scheme: string, provider: vscode.FileSystemProvider, options?: RegisterFileSystemProviderOptions): IDisposable {
-      console.warn('registerFileSystemProvider', scheme, provider, options)
-
       if (_fsProvider.has(scheme)) {
         throw new Error(`A provider with scheme ${scheme} is already registered`)
       }
