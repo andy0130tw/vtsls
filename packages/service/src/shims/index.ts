@@ -63,22 +63,29 @@ export function initializeShimServices(
   const FsProviderDisposables: IDisposable[] = []
 
   if (process.env.BROWSER_ENV) {
-    const fetchProvider = {
+    // from webWorkerFileSystemProvider.ts
+    const fetchFileSystemProvider = {
       async readFile(uri: URI) {
-        const urlStr = uri.toString().replace('/dist/browser/', '/')
+        // FIXME: this is horribly wrong
+        const urlStr = uri.toString(true).replace('/dist/browser/', '/')
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        const resp = await (globalThis as any).fetch(urlStr)
+        const res = await (globalThis as any).fetch(urlStr)
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-        return resp.bytes()
+        return res.bytes()
       },
       stat() {
         // just fake everything
-        return { type: FileType.File }
-      }
+        return {
+          type: FileType.File,
+          size: 0,
+          mtime: 0,
+          ctime: 0,
+        }
+      },
+    } satisfies Partial<import('vscode').FileSystemProvider> as any
 
-    } as any
-    FsProviderDisposables.push(workspaceService.registerFileSystemProvider('http', fetchProvider, {}))
-    FsProviderDisposables.push(workspaceService.registerFileSystemProvider('https', fetchProvider, {}))
+    FsProviderDisposables.push(workspaceService.registerFileSystemProvider('http', fetchFileSystemProvider, {}))
+    FsProviderDisposables.push(workspaceService.registerFileSystemProvider('https', fetchFileSystemProvider, {}))
   }
 
   const dispose = () => {

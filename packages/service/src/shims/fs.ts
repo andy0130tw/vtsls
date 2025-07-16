@@ -156,7 +156,10 @@ export function createFileSystemShim(extensionUri: URI | undefined) {
   // pretty classic way of defining private member, right?
   const _fsProvider = new Map<string, { impl: vscode.FileSystemProvider, isReadonly: boolean } >()
 
-  function getFsProvider(scheme: string) {
+  function withProvider(scheme: string) {
+    if (!_fsProvider.has(scheme)) {
+      throw new Error(`Unsupported URI scheme ${scheme}`)
+    }
     return _fsProvider.get(scheme)
   }
 
@@ -165,7 +168,7 @@ export function createFileSystemShim(extensionUri: URI | undefined) {
     if (extensionUri
       && uri.scheme === extensionUri.scheme
       && uri.authority === extensionUri.authority
-      && uri.path.startsWith(extensionUri.path + '/dist/browser/typescript/lib.')
+      && uri.path.startsWith(extensionUri.path + '/typescript/lib.')
       && uri.path.endsWith('.d.ts')) {
       return uri.path;
     }
@@ -234,7 +237,7 @@ export function createFileSystemShim(extensionUri: URI | undefined) {
     },
 
     async readFile(uri: vscode.Uri): Promise<Uint8Array> {
-      const provider = getFsProvider(uri.scheme)
+      const provider = withProvider(uri.scheme)
       if (provider) {
         return (await provider.impl.readFile(uri)).slice()
       }
@@ -242,7 +245,7 @@ export function createFileSystemShim(extensionUri: URI | undefined) {
     },
 
     async writeFile(uri: vscode.Uri, content: Uint8Array): Promise<void> {
-      const provider = getFsProvider(uri.scheme)
+      const provider = withProvider(uri.scheme)
       if (provider && !provider.isReadonly) {
         // TODO: make sure extUri exists
         await mkdirp(provider.impl, uri)
@@ -254,7 +257,7 @@ export function createFileSystemShim(extensionUri: URI | undefined) {
     },
 
     async stat(uri: vscode.Uri): Promise<FileStat> {
-      const provider = getFsProvider(uri.scheme)
+      const provider = withProvider(uri.scheme)
       if (provider) {
         return await provider.impl.stat(uri)
       }
