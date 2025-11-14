@@ -1,5 +1,5 @@
 diff --git a/src/extension.browser.ts b/src/extension.browser.ts
-index f39740b..2b76d07 100644
+index 6cba39e..2b84756 100644
 --- a/src/extension.browser.ts
 +++ b/src/extension.browser.ts
 @@ -3,14 +3,12 @@
@@ -39,10 +39,10 @@ index f39740b..2b76d07 100644
  		new TypeScriptVersion(
  			TypeScriptVersionSource.Bundled,
 -			vscode.Uri.joinPath(context.extensionUri, 'dist/browser/typescript/tsserver.web.js').toString(),
--			API.fromSimpleString('5.8.3')));
+-			API.fromSimpleString('5.9.0')));
 +			// the user should adjust the extensionUri to point to a valid path
 +			vscode.Uri.joinPath(context.extensionUri, 'tsserver.web.js').toString(),
-+			API.fromSimpleString(versionInString ?? '5.8.3')));
++			API.fromSimpleString(versionInString ?? '5.9.3')));
  
 -	let experimentTelemetryReporter: IExperimentationTelemetryReporter | undefined;
 -	const packageInfo = getPackageInfo(context);
