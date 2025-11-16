@@ -14,12 +14,12 @@
     "language-server-protocol"
   ],
   "dependencies": {
+    "@vtsls/language-service": "0.2.9",
     "vscode-languageserver": "^9.0.1",
-    "vscode-uri": "^3.1.0",
-    "@vtsls/language-service": "0.2.9"
+    "vscode-uri": "^3.1.0"
   },
   "devDependencies": {
-    "esbuild": "^0.27.0"
+    "esbuild": "^0.25.12"
   },
   "scripts": {
     "build": "node build.js",

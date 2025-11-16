@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@types/semver": "^7.5.0",
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.25.12",
     "esbuild-plugins-node-modules-polyfill": "^1.7.1",
     "vitest": "^3.0.3"
   },
