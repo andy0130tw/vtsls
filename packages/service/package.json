@@ -1,7 +1,7 @@
 {
   "name": "@vtsls/language-service",
   "description": "LSP wrapper for typescript extension of vscode",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "license": "MIT",
   "engines": {
     "node": ">=16"
@@ -11,6 +11,7 @@
   "module": "./dist/index.mjs",
   "browser": "./dist/browser.mjs",
   "files": [
+    "./configuration.schema.json",
     "./dist/index.js",
     "./dist/index.mjs",
     "./dist/**/*.d.ts"
@@ -21,7 +22,8 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./configuration-schema": "./configuration.schema.json"
   },
   "dependencies": {
     "@vscode/l10n": "^0.0.18",

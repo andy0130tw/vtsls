@@ -1,5 +1,5 @@
 diff --git a/src/extension.ts b/src/extension.ts
-index 58e47a6..89491dd 100644
+index 6f51fe1..5f3e24f 100644
 --- a/src/extension.ts
 +++ b/src/extension.ts
 @@ -3,7 +3,6 @@
@@ -19,15 +19,16 @@ index 58e47a6..89491dd 100644
  import { createLazyClientHost, lazilyActivateClient } from './lazyClientHost';
  import { Logger } from './logging/logger';
  import { nodeRequestCancellerFactory } from './tsServer/cancellation.electron';
-@@ -23,7 +20,6 @@ import { DiskTypeScriptVersionProvider } from './tsServer/versionProvider.electr
+@@ -22,8 +19,6 @@ import { ElectronServiceProcessFactory } from './tsServer/serverProcess.electron
+ import { DiskTypeScriptVersionProvider } from './tsServer/versionProvider.electron';
  import { ActiveJsTsEditorTracker } from './ui/activeJsTsEditorTracker';
  import { onCaseInsensitiveFileSystem } from './utils/fs.electron';
- import { Lazy } from './utils/lazy';
+-import { Lazy } from './utils/lazy';
 -import { getPackageInfo } from './utils/packageInfo';
  import * as temp from './utils/temp.electron';
  import { conditionalRegistration, requireGlobalConfiguration, requireHasVsCodeExtension } from './languageFeatures/util/dependentRegistration';
  import { DisposableStore } from './utils/dispose';
-@@ -40,18 +36,7 @@ export function activate(
+@@ -40,23 +35,7 @@ export function activate(
  	const logDirectoryProvider = new NodeLogDirectoryProvider(context);
  	const versionProvider = new DiskTypeScriptVersionProvider();
  
@@ -43,20 +44,21 @@ index 58e47a6..89491dd 100644
 -		// shared properties to the ExperimentationTelemetryReporter we just created.
 -		new ExperimentationService(experimentTelemetryReporter, id, version, context.globalState);
 -	}
+-
+-	// Register features that work in both TSGO and non-TSGO modes
+-	import('./languageFeatures/tsconfig').then(module => {
+-		context.subscriptions.push(module.register());
+-	});
 +	let experimentTelemetryReporter;
  
+ 	// Conditionally register features based on whether TSGO is enabled
  	context.subscriptions.push(conditionalRegistration([
- 		requireGlobalConfiguration('typescript', 'experimental.useTsgo'),
-@@ -91,14 +76,6 @@ export function activate(
+@@ -97,10 +76,6 @@ export function activate(
  		// Register features
  		registerBaseCommands(commandManager, lazyClientHost, pluginManager, activeJsTsEditorTracker);
  
 -		import('./task/taskProvider').then(module => {
 -			disposables.add(module.register(new Lazy(() => lazyClientHost.value.serviceClient)));
--		});
--
--		import('./languageFeatures/tsconfig').then(module => {
--			disposables.add(module.register());
 -		});
 -
  		disposables.add(lazilyActivateClient(lazyClientHost, pluginManager, activeJsTsEditorTracker));
