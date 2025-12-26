@@ -22,7 +22,7 @@ async function build({ watch }) {
     outfile: path.resolve(outDir, "index.mjs"),
     bundle: true,
     format: "esm",
-    target: "node16",
+    target: "node18",
     platform: "node",
     define: {
       'process.env.BROWSER_ENV': 'false',
